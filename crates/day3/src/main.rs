@@ -22,17 +22,13 @@ fn solve_problem2(inp: &str) -> i32 {
     let mut ls_co2 = ls_oxygen.clone();
     let (_, len) = count_1s(&ls_oxygen);
     for i in 0..len {
-        let (counts, _) = count_1s(&ls_oxygen);
-        ls_oxygen = filter_lines_common(counts, &ls_oxygen, i);
-        if ls_oxygen.len() == 1 {
-            break;
+        if ls_oxygen.len() > 1 {
+            let (counts, _) = count_1s(&ls_oxygen);
+            ls_oxygen = filter_lines_common(counts, &ls_oxygen, i);
         }
-    }
-    for i in 0..len {
-        let (counts, _) = count_1s(&ls_co2);
-        ls_co2 = filter_lines_uncommon(counts, &ls_co2, i);
-        if ls_co2.len() == 1 {
-            break;
+        if ls_co2.len() > 1 {
+            let (counts, _) = count_1s(&ls_co2);
+            ls_co2 = filter_lines_uncommon(counts, &ls_co2, i);
         }
     }
     let oxy = parse_binary(&ls_oxygen[0]);
@@ -81,7 +77,7 @@ fn line_to_vec(line: &str) -> Vec<i32> {
     let v = line
         .trim()
         .chars()
-        .map(|x| x.to_digit(10).unwrap() as i32)
+        .map(|x| if x == '1' { 1 } else { 0 })
         .collect();
     v
 }
@@ -119,6 +115,7 @@ fn test_parse_binary() {
     assert_eq!(parse_binary(&String::from("11111")), 2i32.pow(5) - 1);
 }
 
+#[allow(dead_code)]
 const TEST_INPUT: &str = r#"
 00100
 11110
